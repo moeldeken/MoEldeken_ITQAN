@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITQAN WORD LEAGUE - Round 1 | مدارس إتقان التربية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --royal-purple-dark: #1a0933;
+            --royal-purple: #2e1052;
+            --royal-purple-light: #4c1d95;
+            --gold-light: #fde68a;
+            --gold-main: #f59e0b;
+            --gold-dark: #b45309;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at top, #3b136c 0%, #19072c 60%, #0d0318 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-en {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Gold metallic gradients */
+        .gold-gradient-text {
+            background: linear-gradient(to bottom, #fffbeb 0%, #fde68a 30%, #f59e0b 70%, #b45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        }
+
+        .gold-banner {
+            background: linear-gradient(135deg, #b45309 0%, #f59e0b 35%, #fef08a 50%, #f59e0b 65%, #92400e 100%);
+            color: #1e0b36;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255,255,255,0.6);
+        }
+
+        .gold-border {
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
+        }
+
+        /* Card & Slide Animations */
+        .glass-panel {
+            background: rgba(46, 16, 82, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(253, 230, 138, 0.25);
+        }
+
+        .letter-tile {
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+        }
+
+        .letter-tile:hover {
+            transform: translateY(-6px) scale(1.05);
+        }
+
+        .letter-tile.revealed {
+            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 100%);
+            color: #1a0933;
+            border-color: #ffffff;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.5);
+            transform: scale(1.06);
+        }
+
+        .student-card {
+            transition: all 0.25s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.35);
+            border-color: #fde68a;
+        }
+        .student-card.spotlight {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+            color: #1a0933 !important;
+            transform: scale(1.07);
+            box-shadow: 0 0 30px #fde68a;
+            border-color: #fff !important;
+            z-index: 20;
+        }
+
+        /* Word blur effect for Listen & Spell mode */
+        .word-hidden {
+            filter: blur(18px);
+            user-select: none;
+            opacity: 0.35;
+            transition: all 0.4s ease;
+        }
+        .word-visible {
+            filter: blur(0);
+            opacity: 1;
+            transition: all 0.4s ease;
+        }
+
+        /* Confetti Canvas */
+        #confettiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a0933;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f59e0b;
+            border-radius: 4px;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(253, 230, 138, 0.8); }
+        }
+        .animate-glow {
+            animation: pulseGlow 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen select-none">
+
+    <!-- Confetti Overlay -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Top Official Header -->
+    <header class="w-full border-b border-amber-400/30 bg-[#140627]/90 backdrop-blur-md sticky top-0 z-40 px-4 py-3 shadow-xl">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <!-- School & Brand -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl gold-banner flex items-center justify-center text-2xl font-black shadow-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 font-en">
+                            Itqan Education Schools
+                        </span>
+                        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-purple-800/80 text-purple-200 border border-purple-500/40">
+                            مدارس إتقان التربية
+                        </span>
+                    </div>
+                    <h1 class="text-xl md:text-2xl font-black tracking-wide font-en gold-gradient-text mt-0.5">
+                        ITQAN WORD LEAGUE <span class="text-white text-sm md:text-base font-normal font-sans">- ROUND 1 (Primary 3–6)</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Teacher Badge & Navigation Controls -->
+            <div class="flex items-center flex-wrap gap-2 md:gap-3">
+                <div class="hidden lg:flex items-center gap-2 bg-purple-950/90 border border-amber-400/40 px-3.5 py-1.5 rounded-xl">
+                    <i class="fa-solid fa-chalkboard-user text-amber-400"></i>
+                    <div class="text-xs">
+                        <div class="text-purple-300">إشراف معلم اللغة الإنجليزية</div>
+                        <div class="font-bold text-amber-300">أ/ محمد أحمد الدقن</div>
+                    </div>
+                </div>
+
+                <button onclick="openWordsModal()" class="px-3.5 py-2 rounded-xl bg-purple-800/80 hover:bg-purple-700 border border-purple-400/40 text-sm font-bold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-book-open text-amber-300"></i>
+                    <span>قائمة الـ 20 كلمة</span>
+                </button>
+
+                <button onclick="openLeaderboardModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400 text-amber-200 text-sm font-bold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-ranking-star text-amber-400"></i>
+                    <span>لوحة النتائج</span>
+                </button>
+
+                <button onclick="toggleFullscreen()" class="p-2.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-amber-300 transition" title="ملء الشاشة للسبورة الذكية">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 flex flex-col">
+
+        <!-- ==================== VIEW 1: DASHBOARD & STUDENT ROSTER ==================== -->
+        <section id="dashboardView" class="flex-1 flex flex-col gap-6">
+            
+            <!-- Hero Banner & Quick Actions -->
+            <div class="glass-panel rounded-3xl p-6 md:p-8 gold-border relative overflow-hidden">
+                <div class="absolute -left-10 -bottom-10 text-9xl text-amber-400/10 pointer-events-none">
+                    <i class="fa-solid fa-spell-check"></i>
+                </div>
+
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+                    <div class="text-center lg:text-right space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full gold-banner font-bold text-xs md:text-sm">
+                            <i class="fa-solid fa-star"></i>
+                            <span>مسابقة إتقان للتهجئة - Spelling Bee Competition</span>
+                        </div>
+                        <h2 class="text-2xl md:text-4xl font-black text-white">
+                            اختر الطالب لبدء التحدي (5 كلمات عشوائية لكل طالب)
+                        </h2>
+                        <p class="text-purple-200 text-sm md:text-base max-w-2xl">
+                            يظهر لكل طالب 5 كلمات عشوائية بنظام شرائح العرض (PowerPoint Slide) ليقوم بنطق الكلمة أولاً ثم تهجئة حروفها باللغة الإنجليزية.
+                        </p>
+                    </div>
+
+                    <!-- Action Buttons: Random Picker & Add Student -->
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <button onclick="pickRandomStudent()" id="randomPickerBtn" class="px-6 py-4 rounded-2xl gold-banner font-black text-lg flex items-center gap-3 hover:scale-105 active:scale-95 transition cursor-pointer animate-glow">
+                            <i class="fa-solid fa-dice text-2xl"></i>
+                            <span>اختيار طالب عشوائي</span>
+                        </button>
+
+                        <button onclick="openAddStudentModal()" class="px-4 py-4 rounded-2xl bg-purple-800/90 hover:bg-purple-700 border border-amber-300/40 font-bold text-sm flex items-center gap-2 transition">
+                            <i class="fa-solid fa-user-plus text-amber-300"></i>
+                            <span>إضافة طالب</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Class Filter Tabs & Stats -->
+                <div class="mt-6 pt-6 border-t border-purple-500/30 flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-2" id="classFilters">
+                        <button onclick="filterClass('ALL')" data-class="ALL" class="class-tab px-4 py-2 rounded-xl font-bold text-sm transition gold-banner">
+                            الكل (<span id="count-ALL">29</span>)
+                        </button>
+                        <button onclick="filterClass('الرابع (أ)')" data-class="الرابع (أ)" class="class-tab px-4 py-2 rounded-xl font-bold text-sm bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-purple-100 transition">
+                            الرابع (أ)
+                        </button>
+                        <button onclick="filterClass('الرابع (ب)')" data-class="الرابع (ب)" class="class-tab px-4 py-2 rounded-xl font-bold text-sm bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-purple-100 transition">
+                            الرابع (ب)
+                        </button>
+                        <button onclick="filterClass('الرابع (ج)')" data-class="الرابع (ج)" class="class-tab px-4 py-2 rounded-xl font-bold text-sm bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-purple-100 transition">
+                            الرابع (ج)
+                        </button>
+                        <button onclick="filterClass('الرابع (د)')" data-class="الرابع (د)" class="class-tab px-4 py-2 rounded-xl font-bold text-sm bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-purple-100 transition">
+                            الرابع (د)
+                        </button>
+                        <button onclick="filterClass('الخامس (أ)')" data-class="الخامس (أ)" class="class-tab px-4 py-2 rounded-xl font-bold text-sm bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-purple-100 transition">
+                            الخامس (أ)
+                        </button>
+                    </div>
+
+                    <!-- Overall Progress Pill -->
+                    <div class="flex items-center gap-4 text-sm bg-purple-950/80 px-4 py-2 rounded-xl border border-purple-600/40">
+                        <div>
+                            <span class="text-purple-300">الطلاب المشاركون:</span>
+                            <span id="completedCountBadge" class="font-black text-amber-400 mr-1">0 / 29</span>
+                        </div>
+                        <button onclick="resetAllScoresConfirm()" class="text-xs text-rose-300 hover:text-rose-200 underline">
+                            تصفير النتائج
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Grid -->
+            <div id="studentsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Populated dynamically by JS -->
+            </div>
+        </section>
+
+
+        <!-- ==================== VIEW 2: POWERPOINT SLIDE PRESENTATION VIEW ==================== -->
+        <section id="slideView" class="hidden flex-1 flex flex-col justify-between gap-4">
+            
+            <!-- Slide Top Bar: Student Info, Word Progress Dots, & Back Button -->
+            <div class="glass-panel rounded-2xl p-4 px-6 flex flex-wrap items-center justify-between gap-4 border border-amber-400/40 shadow-lg">
+                <!-- Active Student Badge -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400 text-purple-950 flex items-center justify-center font-black text-xl shadow-md" id="slideStudentNum">
+                        1
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="slideStudentClass" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                                الصف الرابع (أ)
+                            </span>
+                            <span class="text-xs text-purple-300">متسابق Spelling Bee</span>
+                        </div>
+                        <h2 id="slideStudentName" class="text-xl md:text-2xl font-black text-white mt-0.5">
+                            اسم الطالب
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- 5 Words Progress Indicators (PowerPoint Slide Tabs) -->
+                <div class="flex items-center gap-2" id="wordStepPills">
+                    <!-- Generated by JS: 1 to 5 -->
+                </div>
+
+                <!-- Score & Controls -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-purple-950/90 border border-amber-400/50 px-4 py-2 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-star text-amber-400"></i>
+                        <span class="text-xs text-purple-200">النتيجة:</span>
+                        <span id="slideCurrentScore" class="font-black text-lg text-amber-300 font-en">0 / 5</span>
+                    </div>
+
+                    <button onclick="reshuffleStudentWords()" class="px-3.5 py-2.5 rounded-xl bg-purple-800 hover:bg-purple-700 border border-purple-500 text-xs font-bold flex items-center gap-1.5 transition" title="تغيير الـ 5 كلمات العشوائية لهذا الطالب">
+                        <i class="fa-solid fa-shuffle text-amber-300"></i>
+                        <span>قرعة جديدة</span>
+                    </button>
+
+                    <button onclick="returnToDashboard()" class="px-4 py-2.5 rounded-xl bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span>قائمة الطلاب</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MAIN POWERPOINT SLIDE STAGE -->
+            <div id="activeWordSlide" class="flex-1 glass-panel rounded-3xl p-6 md:p-10 gold-border flex flex-col justify-between relative overflow-hidden shadow-2xl">
+                
+                <!-- Slide Top Controls: Display Mode & Timer -->
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-purple-500/30 pb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="px-4 py-1.5 rounded-full gold-banner font-black text-sm md:text-base font-en" id="wordSlideCounter">
+                            WORD 1 OF 5
+                        </span>
+                        <span class="px-3 py-1.5 rounded-full bg-purple-900/90 border border-purple-500/40 text-purple-200 text-xs font-bold" id="wordOriginalNumber">
+                            رقم الكلمة في البوستر: #1
+                        </span>
+                    </div>
+
+                    <!-- Mode Switcher: Show/Hide Word & Timer -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="toggleWordVisibility()" id="toggleWordVisBtn" class="px-4 py-2 rounded-xl bg-purple-800 hover:bg-purple-700 border border-amber-400/40 text-xs md:text-sm font-bold flex items-center gap-2 transition">
+                            <i class="fa-solid fa-eye-slash text-amber-300" id="toggleWordVisIcon"></i>
+                            <span id="toggleWordVisText">إخفاء الكلمة أثناء التهجئة</span>
+                        </button>
+
+                        <!-- Audio Buttons -->
+                        <button onclick="pronounceCurrentWord(0.8)" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-purple-950 font-black text-xs md:text-sm flex items-center gap-2 transition shadow-md">
+                            <i class="fa-solid fa-volume-high"></i>
+                            <span>نطق الكلمة (Listen)</span>
+                        </button>
+
+                        <button onclick="spellCurrentWordAloud()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs md:text-sm flex items-center gap-2 transition shadow-md">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                            <span>نطق الحروف</span>
+                        </button>
+
+                        <!-- 30s Timer -->
+                        <div class="flex items-center gap-1.5 bg-purple-950 px-3 py-1.5 rounded-xl border border-purple-500/50">
+                            <i class="fa-regular fa-clock text-amber-400"></i>
+                            <span id="timerDisplay" class="font-en font-black text-base text-amber-300 w-10 text-center">30s</span>
+                            <button onclick="toggleTimer()" id="timerBtn" class="text-xs px-2 py-1 rounded bg-purple-800 hover:bg-purple-700 text-white">
+                                تشغيل
+                            </button>
+                            <button onclick="resetTimer()" class="text-xs px-1.5 py-1 rounded bg-purple-900 hover:bg-purple-800 text-purple-300" title="إعادة ضبط المؤقت">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CENTER STAGE: BIG WORD & INTERACTIVE SPELLING TILES -->
+                <div class="my-auto py-8 flex flex-col items-center justify-center text-center space-y-8">
+                    
+                    <!-- Step 1 Instruction Badge -->
+                    <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-purple-950/90 border border-amber-400/30 text-amber-200 text-sm md:text-base font-bold">
+                        <span>1️⃣ اقرأ الكلمة بصوت واضح (Say the Word)</span>
+                        <span class="text-amber-500">•</span>
+                        <span>2️⃣ تهجأ الحروف بالترتيب (Spell the Letters)</span>
+                    </div>
+
+                    <!-- Giant Word Display -->
+                    <div class="relative group cursor-pointer" onclick="pronounceCurrentWord(0.85)" title="اضغط لسماع النطق">
+                        <div id="giantWordText" class="font-en font-black text-6xl sm:text-7xl md:text-8xl lg:text-9xl tracking-wider gold-gradient-text select-all py-2 px-6 word-visible">
+                            school
+                        </div>
+                    </div>
+
+                    <!-- Interactive Letter Boxes (Click each letter as student spells it) -->
+                    <div class="w-full max-w-4xl mx-auto space-y-3">
+                        <div class="flex items-center justify-center gap-2 text-xs text-purple-300">
+                            <span>اضغط على كل حرف ينطقه الطالب لتأكيده أو اضغط:</span>
+                            <button onclick="revealAllLetters()" class="text-amber-300 hover:text-amber-200 font-bold underline flex items-center gap-1">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>إظهار ونطق جميع الحروف</span>
+                            </button>
+                            <span>|</span>
+                            <button onclick="resetLettersHighlight()" class="text-purple-300 hover:text-white underline">
+                                <span>إخفاء تحديد الحروف</span>
+                            </button>
+                        </div>
+
+                        <!-- LTR Container for English Letters -->
+                        <div id="letterTilesContainer" dir="ltr" class="flex flex-wrap items-center justify-center gap-3 md:gap-4 pt-2">
+                            <!-- Generated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE FOOTER: EVALUATION & SLIDE NAVIGATION -->
+                <div class="border-t border-purple-500/30 pt-5 flex flex-wrap items-center justify-between gap-4">
+                    
+                    <!-- Prev Word Button -->
+                    <button onclick="prevWordSlide()" id="prevSlideBtn" class="px-5 py-3.5 rounded-2xl bg-purple-900/90 hover:bg-purple-800 border border-purple-500/40 font-bold text-sm md:text-base flex items-center gap-2 transition disabled:opacity-40 disabled:pointer-events-none">
+                        <i class="fa-solid fa-chevron-right"></i>
+                        <span>الكلمة السابقة</span>
+                    </button>
+
+                    <!-- Teacher Evaluation Buttons (Correct / Wrong) -->
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button onclick="markCurrentWord(true)" id="btnMarkCorrect" class="px-7 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base md:text-lg flex items-center gap-2.5 shadow-lg shadow-emerald-500/30 hover:scale-105 active:scale-95 transition">
+                            <i class="fa-solid fa-circle-check text-xl"></i>
+                            <span>تهجئة صحيحة (+1 نقطة)</span>
+                        </button>
+
+                        <button onclick="markCurrentWord(false)" id="btnMarkWrong" class="px-6 py-4 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-base md:text-lg flex items-center gap-2.5 shadow-lg shadow-rose-600/30 hover:scale-105 active:scale-95 transition">
+                            <i class="fa-solid fa-circle-xmark text-xl"></i>
+                            <span>لم يوفق (0)</span>
+                        </button>
+                    </div>
+
+                    <!-- Next Word Button -->
+                    <button onclick="nextWordSlide()" id="nextSlideBtn" class="px-6 py-3.5 rounded-2xl gold-banner font-black text-sm md:text-base flex items-center gap-2 transition hover:scale-105">
+                        <span id="nextSlideBtnText">الكلمة التالية</span>
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STUDENT SUMMARY SLIDE (SHOWN AFTER 5 WORDS) -->
+            <div id="studentSummarySlide" class="hidden flex-1 glass-panel rounded-3xl p-8 md:p-12 gold-border flex flex-col items-center justify-center text-center space-y-6 shadow-2xl">
+                <div class="w-24 h-24 rounded-3xl gold-banner flex items-center justify-center text-5xl shadow-2xl animate-bounce">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+
+                <div class="space-y-2">
+                    <div id="summaryStudentClass" class="text-sm font-bold text-amber-300 uppercase tracking-widest">الصف الرابع (أ)</div>
+                    <h2 id="summaryStudentName" class="text-3xl md:text-5xl font-black text-white">اسم الطالب</h2>
+                    <p class="text-purple-200 text-lg">أتم تحدي الـ 5 كلمات في مسابقة إتقان (Round 1)</p>
+                </div>
+
+                <!-- Score Display -->
+                <div class="bg-purple-950/90 border-2 border-amber-400 px-10 py-5 rounded-3xl shadow-inner">
+                    <div class="text-xs text-purple-300 mb-1">الدرجة النهائية</div>
+                    <div id="summaryFinalScore" class="font-en text-5xl md:text-6xl font-black gold-gradient-text">5 / 5</div>
+                </div>
+
+                <!-- Review of the 5 words -->
+                <div id="summaryWordsReview" dir="ltr" class="flex flex-wrap items-center justify-center gap-3 max-w-3xl">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Actions after completion -->
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                    <button onclick="returnToDashboard()" class="px-8 py-4 rounded-2xl gold-banner font-black text-lg flex items-center gap-3 hover:scale-105 transition">
+                        <i class="fa-solid fa-users"></i>
+                        <span>العودة لقائمة الطلاب واختيار طالب تالٍ</span>
+                    </button>
+
+                    <button onclick="pickRandomStudentFromSummary()" class="px-6 py-4 rounded-2xl bg-purple-800 hover:bg-purple-700 border border-amber-400/50 font-bold text-base flex items-center gap-2 transition">
+                        <i class="fa-solid fa-dice text-amber-300"></i>
+                        <span>قرعة طالب عشوائي مباشرة</span>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==================== MODAL 1: OFFICIAL 20 WORDS LIST ==================== -->
+    <div id="wordsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-4xl w-full p-6 md:p-8 gold-border max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-purple-500/40 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-book-open text-2xl text-amber-400"></i>
+                    <div>
+                        <h3 class="text-xl font-black text-white">قائمة كلمات المسابقة الرسمية (20 كلمة)</h3>
+                        <p class="text-xs text-purple-300 font-en">ITQAN WORD LEAGUE - Round 1 (Primary - Grades 3–6)</p>
+                    </div>
+                </div>
+                <button onclick="closeWordsModal()" class="w-10 h-10 rounded-xl bg-purple-900 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-amber-200 mb-4">
+                💡 اضغط على أي كلمة للاستماع إلى نطقها وتهجئة حروفها للتدريب الجماعي مع الطلاب:
+            </p>
+
+            <div id="allWordsModalGrid" dir="ltr" class="grid grid-cols-2 sm:grid-cols-4 gap-3 overflow-y-auto pr-1">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 2: LEADERBOARD & RESULTS ==================== -->
+    <div id="leaderboardModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-4xl w-full p-6 md:p-8 gold-border max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-purple-500/40 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-ranking-star text-2xl text-amber-400"></i>
+                    <div>
+                        <h3 class="text-xl font-black text-white">كشف درجات ونتائج المرشحين - مسابقة إتقان</h3>
+                        <p class="text-xs text-purple-300">إشراف معلم اللغة الإنجليزية: أ/ محمد أحمد الدقن</p>
+                    </div>
+                </div>
+                <button onclick="closeLeaderboardModal()" class="w-10 h-10 rounded-xl bg-purple-900 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto flex-1">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="bg-purple-950/90 text-amber-300 text-sm border-b border-purple-500/40">
+                            <th class="p-3 rounded-tr-xl">#</th>
+                            <th class="p-3">اسم الطالب</th>
+                            <th class="p-3">الصف</th>
+                            <th class="p-3">الكلمات الـ 5</th>
+                            <th class="p-3 rounded-tl-xl text-center">الدرجة (من 5)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardTableBody" class="divide-y divide-purple-800/40 text-sm">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 3: ADD / EDIT STUDENT ==================== -->
+    <div id="addStudentModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 gold-border space-y-4">
+            <div class="flex items-center justify-between border-b border-purple-500/40 pb-3">
+                <h3 class="text-lg font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-amber-400"></i>
+                    <span>إضافة طالب جديد للمسابقة</span>
+                </h3>
+                <button onclick="closeAddStudentModal()" class="w-8 h-8 rounded-lg bg-purple-900 hover:bg-rose-600 text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs text-purple-200 mb-1">اسم الطالب:</label>
+                    <input type="text" id="newStudentNameInput" placeholder="مثال: عبد الله محمد..." class="w-full px-4 py-2.5 rounded-xl bg-purple-950 border border-purple-500 text-white focus:outline-none focus:border-amber-400">
+                </div>
+                <div>
+                    <label class="block text-xs text-purple-200 mb-1">الصف:</label>
+                    <select id="newStudentClassInput" class="w-full px-4 py-2.5 rounded-xl bg-purple-950 border border-purple-500 text-white focus:outline-none focus:border-amber-400">
+                        <option value="الرابع (أ)">الرابع (أ)</option>
+                        <option value="الرابع (ب)">الرابع (ب)</option>
+                        <option value="الرابع (ج)">الرابع (ج)</option>
+                        <option value="الرابع (د)">الرابع (د)</option>
+                        <option value="الخامس (أ)">الخامس (أ)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeAddStudentModal()" class="px-4 py-2 rounded-xl bg-purple-900 text-purple-200 text-sm font-bold">إلغاء</button>
+                <button onclick="saveNewStudent()" class="px-6 py-2 rounded-xl gold-banner text-sm font-black">إضافة الطالب</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast / Confirmation Box (No alert/confirm) -->
+    <div id="customConfirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl max-w-sm w-full p-6 gold-border text-center space-y-4">
+            <div class="w-14 h-14 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-300 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h4 class="text-lg font-black text-white">تأكيد إعادة ضبط النتائج</h4>
+            <p class="text-sm text-purple-200">هل ترغب في تصفير جميع درجات الطلاب وإعادة المسابقة من البداية؟</p>
+            <div class="flex items-center justify-center gap-3 pt-2">
+                <button onclick="closeResetConfirm()" class="px-5 py-2.5 rounded-xl bg-purple-900 text-white text-sm font-bold">إلغاء</button>
+                <button onclick="executeResetAllScores()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold">نعم، تصفير الكل</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full py-3 px-4 border-t border-purple-800/50 bg-[#110420] text-center text-xs text-purple-300 flex flex-wrap items-center justify-between max-w-7xl mx-auto">
+        <div>مدارس إتقان التربية - Itqan Education Schools | <span class="font-en text-amber-300">ITQAN WORD LEAGUE 2026</span></div>
+        <div>معلم اللغة الإنجليزية: <span class="text-amber-300 font-bold">أ/ محمد أحمد الدقن</span></div>
+    </footer>
+
+    <!-- ==================== APPLICATION LOGIC ==================== -->
+    <script>
+        // 1. OFFICIAL 20 WORDS FROM POSTER (Round 1 - Primary Grades 3-6)
+        const OFFICIAL_WORDS = [
+            { num: 1, word: "school" },
+            { num: 2, word: "teacher" },
+            { num: 3, word: "student" },
+            { num: 4, word: "pencil" },
+            { num: 5, word: "book" },
+            { num: 6, word: "table" },
+            { num: 7, word: "chair" },
+            { num: 8, word: "water" },
+            { num: 9, word: "happy" },
+            { num: 10, word: "family" },
+            { num: 11, word: "garden" },
+            { num: 12, word: "window" },
+            { num: 13, word: "morning" },
+            { num: 14, word: "friend" },
+            { num: 15, word: "yellow" },
+            { num: 16, word: "mother" },
+            { num: 17, word: "father" },
+            { num: 18, word: "classroom" },
+            { num: 19, word: "picture" },
+            { num: 20, word: "answer" }
+        ];
+
+        // 2. COMPLETE STUDENT ROSTER FROM UPLOADED SHEET
+        const INITIAL_STUDENTS = [
+            // الصف الرابع (أ)
+            { id: 1, name: "حسن هيثم الحربي", grade: "الرابع (أ)" },
+            { id: 2, name: "سلمان سمير الزيد", grade: "الرابع (أ)" },
+            { id: 3, name: "ماجد فهد العتيبي", grade: "الرابع (أ)" },
+            { id: 4, name: "ناصر محمد المطيري", grade: "الرابع (أ)" },
+            { id: 5, name: "محمد صائل الشمري", grade: "الرابع (أ)" },
+
+            // الصف الرابع (ب)
+            { id: 6, name: "إياد فيصل المطيري", grade: "الرابع (ب)" },
+            { id: 7, name: "يزيد فهد المطيري", grade: "الرابع (ب)" },
+            { id: 8, name: "خالد رفيع", grade: "الرابع (ب)" },
+            { id: 9, name: "نواف سعيد الأحمري", grade: "الرابع (ب)" },
+            { id: 10, name: "هادي الشرافي", grade: "الرابع (ب)" },
+            { id: 11, name: "الوليد محمد الزهراني", grade: "الرابع (ب)" },
+
+            // الصف الرابع (ج)
+            { id: 12, name: "جسيم سعد الزهراني", grade: "الرابع (ج)" },
+            { id: 13, name: "محمد خالد القحطاني", grade: "الرابع (ج)" },
+            { id: 14, name: "بتال العريني", grade: "الرابع (ج)" },
+            { id: 15, name: "فهد الشهري", grade: "الرابع (ج)" },
+            { id: 16, name: "مشاري عوض العمري", grade: "الرابع (ج)" },
+
+            // الصف الرابع (د)
+            { id: 17, name: "سعود السالمي", grade: "الرابع (د)" },
+            { id: 18, name: "منصور بندر المطيري", grade: "الرابع (د)" },
+            { id: 19, name: "أمير عبد الكريم", grade: "الرابع (د)" },
+            { id: 20, name: "سلطان فراس مجلد", grade: "الرابع (د)" },
+            { id: 21, name: "راكان رشيد", grade: "الرابع (د)" },
+
+            // الصف الخامس (أ)
+            { id: 22, name: "حسام محمد الضرمان", grade: "الخامس (أ)" },
+            { id: 23, name: "حسين علي الشهري", grade: "الخامس (أ)" },
+            { id: 24, name: "سلطان سعيد الجهني", grade: "الخامس (أ)" },
+            { id: 25, name: "عزام محمد البقمي", grade: "الخامس (أ)" },
+            { id: 26, name: "أمير أحمد المالكي", grade: "الخامس (أ)" },
+            { id: 27, name: "حاتم عبد الرحمن حسين", grade: "الخامس (أ)" },
+            { id: 28, name: "نايف حسين نهاري", grade: "الخامس (أ)" },
+            { id: 29, name: "معتز عبد الحكيم الغامدي", grade: "الخامس (أ)" }
+        ];
+
+        // State Variables
+        let students = [];
+        let currentFilter = 'ALL';
+        let activeStudentId = null;
+        let activeWordIndex = 0; // 0 to 4
+        let isWordHidden = false;
+        let timerInterval = null;
+        let timeLeft = 30;
+        let audioCtx = null;
+
+        // Initialize Audio Context on user interaction
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // Synthesized Sound Effects (Web Audio API)
+        function playTone(freq, type = 'sine', duration = 0.15, volume = 0.2) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(volume, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playSuccessSound() {
+            playTone(523.25, 'triangle', 0.15, 0.25); // C5
+            setTimeout(() => playTone(659.25, 'triangle', 0.15, 0.25), 110); // E5
+            setTimeout(() => playTone(783.99, 'triangle', 0.2, 0.25), 220); // G5
+            setTimeout(() => playTone(1046.50, 'triangle', 0.4, 0.3), 330); // C6
+        }
+
+        function playWrongSound() {
+            playTone(220, 'sawtooth', 0.25, 0.15);
+            setTimeout(() => playTone(180, 'sawtooth', 0.35, 0.15), 200);
+        }
+
+        function playPopSound(index = 0) {
+            playTone(400 + index * 65, 'sine', 0.12, 0.2);
+        }
+
+        // Generate 5 Unique Random Words for a student
+        function pickFiveRandomWords() {
+            const pool = [...OFFICIAL_WORDS];
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            return pool.slice(0, 5).map(item => ({
+                num: item.num,
+                word: item.word,
+                status: null // null = unanswered, true = correct, false = wrong
+            }));
+        }
+
+        // Load or Initialize Students
+        function initApp() {
+            const saved = localStorage.getItem('itqan_spelling_bee_v1');
+            if (saved) {
+                try {
+                    students = JSON.parse(saved);
+                } catch (e) {
+                    students = createFreshStudents();
+                }
+            } else {
+                students = createFreshStudents();
+            }
+            renderDashboard();
+            renderAllWordsModal();
+        }
+
+        function createFreshStudents() {
+            return INITIAL_STUDENTS.map(s => ({
+                ...s,
+                words: pickFiveRandomWords(),
+                completed: false
+            }));
+        }
+
+        function saveState() {
+            localStorage.setItem('itqan_spelling_bee_v1', JSON.stringify(students));
+        }
+
+        // Calculate Student Score
+        function getStudentScore(student) {
+            return student.words.filter(w => w.status === true).length;
+        }
+
+        function isStudentAttempted(student) {
+            return student.words.some(w => w.status !== null);
+        }
+
+        // Render Main Dashboard Grid
+        function renderDashboard() {
+            const grid = document.getElementById('studentsGrid');
+            grid.innerHTML = '';
+
+            const filtered = currentFilter === 'ALL'
+                ? students
+                : students.filter(s => s.grade === currentFilter);
+
+            document.getElementById('count-ALL').textContent = students.length;
+
+            const completedCount = students.filter(s => isStudentAttempted(s)).length;
+            document.getElementById('completedCountBadge').textContent = `${completedCount} / ${students.length}`;
+
+            filtered.forEach((student) => {
+                const score = getStudentScore(student);
+                const attempted = isStudentAttempted(student);
+                const answeredCount = student.words.filter(w => w.status !== null).length;
+
+                const card = document.createElement('div');
+                card.id = `student-card-${student.id}`;
+                card.onclick = () => startStudentTurn(student.id);
+                card.className = `student-card glass-panel rounded-2xl p-4 cursor-pointer border ${
+                    answeredCount === 5
+                        ? 'border-emerald-400/60 bg-emerald-950/30'
+                        : attempted
+                        ? 'border-amber-400/60'
+                        : 'border-purple-500/30'
+                } flex flex-col justify-between gap-3`;
+
+                // Mini 5 dots preview
+                let dotsHtml = student.words.map(w => {
+                    if (w.status === true) return `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span>`;
+                    if (w.status === false) return `<span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>`;
+                    return `<span class="w-2.5 h-2.5 rounded-full bg-purple-600 inline-block"></span>`;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-8 h-8 rounded-xl bg-purple-900 border border-amber-400/40 text-amber-300 font-bold text-sm flex items-center justify-center shrink-0">
+                                ${student.id}
+                            </span>
+                            <div>
+                                <h3 class="font-extrabold text-base text-white leading-snug">${student.name}</h3>
+                                <span class="text-xs text-amber-300/90 font-semibold">${student.grade}</span>
+                            </div>
+                        </div>
+                        ${
+                            attempted
+                                ? `<span class="px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-400 text-amber-300 font-en font-black text-xs">${score}/5</span>`
+                                : `<span class="px-2 py-0.5 rounded-lg bg-purple-900/80 text-purple-300 text-[11px]">جاهز</span>`
+                        }
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-purple-500/20">
+                        <div class="flex items-center gap-1.5">
+                            ${dotsHtml}
+                        </div>
+                        <span class="text-xs font-bold text-amber-300 flex items-center gap-1">
+                            <span>عرض الـ 5 كلمات</span>
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter by Class
+        function filterClass(gradeName) {
+            currentFilter = gradeName;
+            document.querySelectorAll('.class-tab').forEach(btn => {
+                if (btn.getAttribute('data-class') === gradeName) {
+                    btn.className = "class-tab px-4 py-2 rounded-xl font-bold text-sm transition gold-banner";
+                } else {
+                    btn.className = "class-tab px-4 py-2 rounded-xl font-bold text-sm bg-purple-900/80 hover:bg-purple-800 border border-purple-500/40 text-purple-100 transition";
+                }
+            });
+            renderDashboard();
+        }
+
+        // Exciting Slot-Machine Random Student Picker
+        function pickRandomStudent() {
+            const filtered = currentFilter === 'ALL'
+                ? students
+                : students.filter(s => s.grade === currentFilter);
+
+            // Prefer students who haven't completed all 5 words yet
+            let candidates = filtered.filter(s => s.words.some(w => w.status === null));
+            if (candidates.length === 0) candidates = filtered;
+            if (candidates.length === 0) return;
+
+            const btn = document.getElementById('randomPickerBtn');
+            btn.disabled = true;
+
+            let steps = 0;
+            const totalSteps = 18;
+            let lastHighlighted = null;
+
+            const interval = setInterval(() => {
+                if (lastHighlighted) {
+                    lastHighlighted.classList.remove('spotlight');
+                }
+                const randomCandidate = candidates[Math.floor(Math.random() * candidates.length)];
+                const cardEl = document.getElementById(`student-card-${randomCandidate.id}`);
+                if (cardEl) {
+                    cardEl.classList.add('spotlight');
+                    cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    lastHighlighted = cardEl;
+                }
+                playTone(320 + (steps * 22), 'triangle', 0.07, 0.15);
+                steps++;
+
+                if (steps >= totalSteps) {
+                    clearInterval(interval);
+                    playSuccessSound();
+                    setTimeout(() => {
+                        if (lastHighlighted) lastHighlighted.classList.remove('spotlight');
+                        btn.disabled = false;
+                        startStudentTurn(randomCandidate.id);
+                    }, 650);
+                }
+            }, 95);
+        }
+
+        // ==================== SLIDE PRESENTATION LOGIC ====================
+        function startStudentTurn(studentId) {
+            activeStudentId = studentId;
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            // Ensure student has 5 words
+            if (!student.words || student.words.length !== 5) {
+                student.words = pickFiveRandomWords();
+            }
+
+            // Start at first unanswered word, or word 0
+            const firstUnanswered = student.words.findIndex(w => w.status === null);
+            activeWordIndex = firstUnanswered !== -1 ? firstUnanswered : 0;
+
+            document.getElementById('dashboardView').classList.add('hidden');
+            document.getElementById('slideView').classList.remove('hidden');
+            document.getElementById('activeWordSlide').classList.remove('hidden');
+            document.getElementById('studentSummarySlide').classList.add('hidden');
+
+            renderActiveSlide();
+        }
+
+        function renderActiveSlide() {
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+
+            const currentWordObj = student.words[activeWordIndex];
+            resetTimer();
+
+            // Header details
+            document.getElementById('slideStudentNum').textContent = student.id;
+            document.getElementById('slideStudentName').textContent = student.name;
+            document.getElementById('slideStudentClass').textContent = `الصف ${student.grade}`;
+            document.getElementById('slideCurrentScore').textContent = `${getStudentScore(student)} / 5`;
+
+            // Render 5 Word Step Pills
+            const pillsContainer = document.getElementById('wordStepPills');
+            pillsContainer.innerHTML = '';
+            student.words.forEach((w, idx) => {
+                const pill = document.createElement('button');
+                pill.onclick = () => {
+                    activeWordIndex = idx;
+                    renderActiveSlide();
+                };
+
+                let colorClass = 'bg-purple-900/90 text-purple-200 border-purple-500/40';
+                if (w.status === true) colorClass = 'bg-emerald-500 text-slate-950 border-emerald-300 font-black';
+                if (w.status === false) colorClass = 'bg-rose-600 text-white border-rose-400 font-black';
+
+                const activeRing = idx === activeWordIndex ? 'ring-4 ring-amber-400 scale-110' : 'opacity-80 hover:opacity-100';
+
+                pill.className = `px-3.5 py-1.5 rounded-xl border text-xs md:text-sm font-bold transition flex items-center gap-1.5 ${colorClass} ${activeRing}`;
+                pill.innerHTML = `
+                    <span>كلمة ${idx + 1}</span>
+                    ${w.status === true ? '<i class="fa-solid fa-check"></i>' : w.status === false ? '<i class="fa-solid fa-xmark"></i>' : ''}
+                `;
+                pillsContainer.appendChild(pill);
+            });
+
+            // Word Slide Counter & Poster Ref
+            document.getElementById('wordSlideCounter').textContent = `WORD ${activeWordIndex + 1} OF 5`;
+            document.getElementById('wordOriginalNumber').textContent = `رقم الكلمة في البوستر: #${currentWordObj.num}`;
+
+            // Giant Word Text
+            const giantWordEl = document.getElementById('giantWordText');
+            giantWordEl.textContent = currentWordObj.word;
+            applyWordVisibilityUI();
+
+            // Interactive Letter Tiles
+            const lettersContainer = document.getElementById('letterTilesContainer');
+            lettersContainer.innerHTML = '';
+            const letters = currentWordObj.word.toUpperCase().split('');
+
+            letters.forEach((char, i) => {
+                const tile = document.createElement('button');
+                tile.className = `letter-tile w-14 h-16 sm:w-16 sm:h-20 md:w-20 md:h-24 rounded-2xl bg-purple-950/90 border-2 border-amber-400/50 text-amber-300 font-en font-black text-3xl sm:text-4xl md:text-5xl flex flex-col items-center justify-center shadow-xl cursor-pointer`;
+                tile.innerHTML = `
+                    <span>${ isWordHidden ? '?' : char }</span>
+                    <span class="text-[10px] font-normal text-purple-400 mt-1">${i + 1}</span>
+                `;
+                tile.onclick = () => {
+                    tile.classList.toggle('revealed');
+                    const spanChar = tile.querySelector('span');
+                    spanChar.textContent = char;
+                    playPopSound(i);
+                    speakText(char.toLowerCase(), 0.9);
+                };
+                lettersContainer.appendChild(tile);
+            });
+
+            // Prev / Next buttons state
+            document.getElementById('prevSlideBtn').disabled = activeWordIndex === 0;
+            const nextBtnText = document.getElementById('nextSlideBtnText');
+            nextBtnText.textContent = activeWordIndex === 4 ? 'إنهاء وعرض النتيجة' : 'الكلمة التالية';
+        }
+
+        // Toggle Word Visibility (Hide word while student spells from memory if desired)
+        function toggleWordVisibility() {
+            isWordHidden = !isWordHidden;
+            applyWordVisibilityUI();
+            renderActiveSlide();
+        }
+
+        function applyWordVisibilityUI() {
+            const giantWordEl = document.getElementById('giantWordText');
+            const icon = document.getElementById('toggleWordVisIcon');
+            const text = document.getElementById('toggleWordVisText');
+
+            if (isWordHidden) {
+                giantWordEl.classList.remove('word-visible');
+                giantWordEl.classList.add('word-hidden');
+                icon.className = 'fa-solid fa-eye text-amber-300';
+                text.textContent = 'إظهار الكلمة على الشاشة';
+            } else {
+                giantWordEl.classList.remove('word-hidden');
+                giantWordEl.classList.add('word-visible');
+                icon.className = 'fa-solid fa-eye-slash text-amber-300';
+                text.textContent = 'إخفاء الكلمة أثناء التهجئة';
+            }
+        }
+
+        // Reveal All Letters with Animation and Sound
+        function revealAllLetters() {
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+            const word = student.words[activeWordIndex].word.toUpperCase();
+            const tiles = document.querySelectorAll('#letterTilesContainer .letter-tile');
+
+            tiles.forEach((tile, idx) => {
+                setTimeout(() => {
+                    tile.classList.add('revealed');
+                    tile.querySelector('span').textContent = word[idx];
+                    playPopSound(idx);
+                }, idx * 180);
+            });
+        }
+
+        function resetLettersHighlight() {
+            renderActiveSlide();
+        }
+
+        // Mark Current Word Correct or Wrong
+        function markCurrentWord(isCorrect) {
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+
+            student.words[activeWordIndex].status = isCorrect;
+            saveState();
+
+            if (isCorrect) {
+                playSuccessSound();
+                revealAllLetters();
+            } else {
+                playWrongSound();
+            }
+
+            // Update Score & Pills immediately
+            document.getElementById('slideCurrentScore').textContent = `${getStudentScore(student)} / 5`;
+            const pills = document.getElementById('wordStepPills').children;
+            if (pills[activeWordIndex]) {
+                renderActiveSlide();
+            }
+
+            // Auto-advance after short delay
+            setTimeout(() => {
+                if (activeWordIndex < 4) {
+                    activeWordIndex++;
+                    renderActiveSlide();
+                } else {
+                    showStudentSummarySlide();
+                }
+            }, 950);
+        }
+
+        function prevWordSlide() {
+            if (activeWordIndex > 0) {
+                activeWordIndex--;
+                renderActiveSlide();
+            }
+        }
+
+        function nextWordSlide() {
+            if (activeWordIndex < 4) {
+                activeWordIndex++;
+                renderActiveSlide();
+            } else {
+                showStudentSummarySlide();
+            }
+        }
+
+        // Reshuffle 5 Random Words for current student
+        function reshuffleStudentWords() {
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+            student.words = pickFiveRandomWords();
+            activeWordIndex = 0;
+            saveState();
+            playPopSound(2);
+            renderActiveSlide();
+        }
+
+        // Show End of 5 Words Summary Slide
+        function showStudentSummarySlide() {
+            resetTimer();
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+
+            document.getElementById('activeWordSlide').classList.add('hidden');
+            document.getElementById('studentSummarySlide').classList.remove('hidden');
+
+            const score = getStudentScore(student);
+            document.getElementById('summaryStudentClass').textContent = `الصف ${student.grade}`;
+            document.getElementById('summaryStudentName').textContent = student.name;
+            document.getElementById('summaryFinalScore').textContent = `${score} / 5`;
+
+            const reviewContainer = document.getElementById('summaryWordsReview');
+            reviewContainer.innerHTML = '';
+            student.words.forEach(w => {
+                const badge = document.createElement('div');
+                const statusColor = w.status === true
+                    ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
+                    : w.status === false
+                    ? 'bg-rose-500/20 border-rose-400 text-rose-300'
+                    : 'bg-purple-900/80 border-purple-500 text-purple-300';
+
+                badge.className = `px-5 py-3 rounded-2xl border-2 font-en font-bold text-xl flex items-center gap-2 ${statusColor}`;
+                badge.innerHTML = `
+                    <span>${w.word}</span>
+                    ${w.status === true ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' : w.status === false ? '<i class="fa-solid fa-circle-xmark text-rose-400"></i>' : ''}
+                `;
+                reviewContainer.appendChild(badge);
+            });
+
+            if (score >= 4) {
+                launchConfetti();
+                playSuccessSound();
+            }
+        }
+
+        function returnToDashboard() {
+            resetTimer();
+            document.getElementById('slideView').classList.add('hidden');
+            document.getElementById('dashboardView').classList.remove('hidden');
+            renderDashboard();
+        }
+
+        function pickRandomStudentFromSummary() {
+            returnToDashboard();
+            setTimeout(() => pickRandomStudent(), 200);
+        }
+
+        // ==================== SPEECH SYNTHESIS (PRONUNCIATION) ====================
+        function speakText(text, rate = 0.85) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            utter.rate = rate;
+            utter.pitch = 1.0;
+            window.speechSynthesis.speak(utter);
+        }
+
+        function pronounceCurrentWord(rate = 0.8) {
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+            const word = student.words[activeWordIndex].word;
+            speakText(word, rate);
+        }
+
+        function spellCurrentWordAloud() {
+            const student = students.find(s => s.id === activeStudentId);
+            if (!student) return;
+            const word = student.words[activeWordIndex].word;
+            const letters = word.split('').join('. ');
+            speakText(`${word}. ${letters}. ${word}`, 0.75);
+            revealAllLetters();
+        }
+
+        // ==================== 30-SECOND TIMER ====================
+        function toggleTimer() {
+            const btn = document.getElementById('timerBtn');
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                btn.textContent = 'تشغيل';
+            } else {
+                btn.textContent = 'إيقاف';
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        document.getElementById('timerDisplay').textContent = `${timeLeft}s`;
+                        if (timeLeft <= 5 && timeLeft > 0) {
+                            playTone(600, 'sine', 0.08, 0.15);
+                        }
+                    } else {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        btn.textContent = 'تشغيل';
+                        playWrongSound();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timeLeft = 30;
+            const disp = document.getElementById('timerDisplay');
+            const btn = document.getElementById('timerBtn');
+            if (disp) disp.textContent = '30s';
+            if (btn) btn.textContent = 'تشغيل';
+        }
+
+        // ==================== MODALS: 20 WORDS, LEADERBOARD, ADD STUDENT ====================
+        function renderAllWordsModal() {
+            const grid = document.getElementById('allWordsModalGrid');
+            grid.innerHTML = '';
+            OFFICIAL_WORDS.forEach(item => {
+                const card = document.createElement('button');
+                card.onclick = () => speakText(`${item.word}. ${item.word.split('').join('. ')}`, 0.8);
+                card.className = "p-3.5 rounded-2xl bg-purple-950/90 hover:bg-purple-800 border border-amber-400/30 flex items-center justify-between transition group";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-7 h-7 rounded-lg gold-banner font-en font-black text-xs flex items-center justify-center">
+                            ${item.num}
+                        </span>
+                        <span class="font-en font-bold text-lg text-white group-hover:text-amber-300">${item.word}</span>
+                    </div>
+                    <i class="fa-solid fa-volume-high text-amber-400 opacity-70 group-hover:opacity-100"></i>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openWordsModal() {
+            document.getElementById('wordsModal').classList.remove('hidden');
+            document.getElementById('wordsModal').classList.add('flex');
+        }
+        function closeWordsModal() {
+            document.getElementById('wordsModal').classList.add('hidden');
+            document.getElementById('wordsModal').classList.remove('flex');
+        }
+
+        function openLeaderboardModal() {
+            const tbody = document.getElementById('leaderboardTableBody');
+            tbody.innerHTML = '';
+
+            // Sort by score descending, then by ID
+            const sorted = [...students].sort((a, b) => getStudentScore(b) - getStudentScore(a) || a.id - b.id);
+
+            sorted.forEach((student, idx) => {
+                const score = getStudentScore(student);
+                const wordsList = student.words.map(w => {
+                    const color = w.status === true ? 'text-emerald-400' : w.status === false ? 'text-rose-400' : 'text-purple-300';
+                    return `<span class="font-en font-semibold ${color}">${w.word}</span>`;
+                }).join(' ، ');
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-purple-900/40 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-en font-bold text-amber-300">${idx + 1}</td>
+                    <td class="p-3 font-bold text-white">${student.name}</td>
+                    <td class="p-3 text-purple-200">${student.grade}</td>
+                    <td class="p-3 text-xs" dir="ltr">${wordsList}</td>
+                    <td class="p-3 text-center font-en font-black text-base text-amber-300">${score} / 5</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('leaderboardModal').classList.remove('hidden');
+            document.getElementById('leaderboardModal').classList.add('flex');
+        }
+
+        function closeLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.add('hidden');
+            document.getElementById('leaderboardModal').classList.remove('flex');
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('newStudentNameInput').value = '';
+            document.getElementById('addStudentModal').classList.remove('hidden');
+            document.getElementById('addStudentModal').classList.add('flex');
+        }
+        function closeAddStudentModal() {
+            document.getElementById('addStudentModal').classList.add('hidden');
+            document.getElementById('addStudentModal').classList.remove('flex');
+        }
+
+        function saveNewStudent() {
+            const nameInput = document.getElementById('newStudentNameInput').value.trim();
+            const gradeInput = document.getElementById('newStudentClassInput').value;
+            if (!nameInput) return;
+
+            const newId = students.length > 0 ? Math.max(...students.map(s => s.id)) + 1 : 1;
+            students.push({
+                id: newId,
+                name: nameInput,
+                grade: gradeInput,
+                words: pickFiveRandomWords(),
+                completed: false
+            });
+            saveState();
+            renderDashboard();
+            closeAddStudentModal();
+        }
+
+        function resetAllScoresConfirm() {
+            document.getElementById('customConfirmModal').classList.remove('hidden');
+            document.getElementById('customConfirmModal').classList.add('flex');
+        }
+        function closeResetConfirm() {
+            document.getElementById('customConfirmModal').classList.add('hidden');
+            document.getElementById('customConfirmModal').classList.remove('flex');
+        }
+        function executeResetAllScores() {
+            students = createFreshStudents();
+            saveState();
+            renderDashboard();
+            closeResetConfirm();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        // ==================== CONFETTI CELEBRATION ====================
+        function launchConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const pieces = Array.from({ length: 110 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 9 + 5,
+                speedY: Math.random() * 4 + 2.5,
+                speedX: (Math.random() - 0.5) * 3,
+                color: ['#f59e0b', '#fde68a', '#10b981', '#a855f7', '#ffffff'][Math.floor(Math.random() * 5)],
+                rotation: Math.random() * 360
+            }));
+
+            let frames = 0;
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += 4;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+                frames++;
+                if (frames < 180) {
+                    requestAnimationFrame(draw);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            draw();
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
